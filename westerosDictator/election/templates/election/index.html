@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accueil</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'election/style.css' %}">
+    <link href="http://fonts.cdnfonts.com/css/supernatural-knight" rel="stylesheet">
+
+</head>
+<body>
+    <div class="container">
+        <div class="left">
+            <div class="header">
+            <h1 class="animation a1">Election de dictateur</h1>
+        </div>
+        <form>
+            {% if election_list %}
+                <ul>
+                {% for election in election_list %}
+                    <li class="animation a2">
+                        <a href="{% url 'election:detail' election.id %}">{{ election.election_name }}</a>
+                    </li>
+                {% endfor %}    
+                </ul>
+            {% else %}
+                <p>Pas d'élection en cours</p>
+            {% endif %}   
+        </form>
+        </div>
+        <div class="right"></div>
+    </div>
+</body>
+</html>
