@@ -2,25 +2,26 @@ version: "3.8"
 services: 
   web:
     build: .
-    command: python westerosdictator/manage.py runserver 0.0.0.0:8000
+    command: gunicorn westerosdictator.westerosDictator.wsgi:application --bind 0.0.0.0:8000
     volumes: 
-      - .:/code
+      - ./static_volume:/code/staticfiles
     ports: 
       - "8000:8000"
-    environment:
-      - MARIADB_DATABASE=db
-      - MARIADB_USER=dev
-      - MARIADB_PASSWORD=Azerty77
-      - MARIADB_HOST=db
-      - MARIADB_PORT=3306
+    env_file:
+      - .env
   db:
     image: mariadb
-    environment: 
-      - MARIADB_ROOT_PASSWORD=secret
-      - MARIADB_DATABASE=db
-      - MARIADB_USER=dev
-      - MARIADB_PASSWORD=Azerty77 
+    env_file:
+      - .env  
     volumes: 
       - mariadb_data:/var/lib/mysql/data
+  nginx:
+    build: ./nginx
+    ports: 
+      - "80:80"
+    depends_on:
+      - web
+    volumes:
+      - ./static_volume:/code/staticfiles  
 volumes:
   mariadb_data:
